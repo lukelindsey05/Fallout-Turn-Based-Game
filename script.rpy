@@ -1,4 +1,4 @@
-
+﻿
 # The script of the game goes in this file.
 transform big_size:
     zoom 1.5
@@ -8,7 +8,7 @@ transform half_size:
 # name of the character.
 
 
-define VO = Character("Vault Overseer", image = "")
+define VO = Character("Military Commander", image = "")
 
 define VS1 = Character("Vault Security", image = "VaultSecurity")
 
@@ -33,16 +33,15 @@ label start:
     $ queststatus = []
     #play music #Fallout intro music
 
-    scene bg room #fallout
-
-    show eileen happy #VAULT OVERSEER
-
+    scene vaultmilitary #fallout
 
     VO "Holy crap! the bombs just dropped!"
 
     VO "Hurry up and make your way into the vault its our only safety! Thank Goodness for Vault-Tec."
 
 label safetyordeath:
+
+    scene vaultmilitary
 
     menu:
         "Should I trust my life with Vaul-Tec or should I hop into this conviently placed Pulowski Preservation Shelter."
@@ -59,11 +58,14 @@ label pulowskiDeath:
 
     #play sound #Pulowski chamber ad
 
-    scene #Picture of interior of chamber
-
+    scene pulowskichamber
     "Seems like this was the safe option."
 
-    scene #picture of skeleton in chamber
+    scene black
+
+    "{b}SOUND OF BOMBS DROPPING{/b}"
+
+    scene pulowskichamberdeath
 
     "{b}YOU ARE DEAD{/b}"
 
@@ -73,11 +75,8 @@ label vaultEntrance:
 
     #play sound #vault door closing sound
 
-    scene vaultentrance at big_size
+    scene vaultentrance2
 
-    show vaultsecurity at half_size, left
-
-    show vaultscientist at big_size, center
 
     VS1 "Welcome to the Vault, here's your jumpsuit."
     $ clothes = ["vault jumpsuit"]
@@ -111,8 +110,6 @@ label vaultStorageRoom:
 
     scene vaultstorageroom
 
-    show deadsecurity
-
     "It seems like something must have happened theres a dead security guard and everyone else seems to be gone."
 
 
@@ -120,7 +117,6 @@ label choiceloot:
 
     scene vaultstorageroom
 
-    show deadsecurity
 
     menu:
         "Should I check the terminal, try to pick the locked armory, or leave the vault?"
@@ -232,7 +228,9 @@ label myhousechoice:
 
             scene bedroom
 
-            $ clothesfound = renpy.random.choice(["Pajamas","Military Fatigues","Black Suit"])
+            $ seq = ["Pajamas","Military Fatigues","Black Suit"]
+
+            $ clothesfound = renpy.random.choice(seq)
 
             if clothesfound == "Pajamas":
                 
@@ -312,13 +310,15 @@ label myhousechoice:
 
 label neighborhouses:
     
-    scene neighborhood
+    scene neighborhoodhouses
 
     "It looks like my neighbors houses are in better condition then mine maybe ill find something in them."
 
     "My one neighbor still seems to have a working Mr. Handy maybe ill talk to it."
 
 label neighborhouseschoice:
+
+    scene neighborhoodhouses
 
     menu:
 
@@ -329,8 +329,6 @@ label neighborhouseschoice:
             label misterhandychoice1:
 
                 scene lonewanderhouse
-
-                show mrhandy
 
                 MH "MASTER YOUR HOME!"
 
@@ -392,7 +390,7 @@ label neighborhouseschoice:
                             
                             MH "No your not."
 
-                            jump misterhandychoice
+                            jump misterhandychoice1
 
                     "Lie and Tell Mr. Handy I am his family : 50%% ":
 
@@ -514,13 +512,15 @@ label neighborhouseschoice:
 
                             scene yellowhouse
 
+                            "Let me look around the house."
+
+                            scene bunkerdoor
+
                             menu:
 
                                 "You found a bunker in the backyard of the yellow house. It looks homemade should I check it out or move on?"
 
                                 "Try to lockpick the bunker.":
-
-                                    scene bunkerdoor
 
                                     $ lockpick = renpy.random.randint(1,10)
 
@@ -528,17 +528,13 @@ label neighborhouseschoice:
 
                                         label bunkerchoice:
 
-                                            scene bunkerdoor
-
                                             menu:
 
                                                 "I unlocked the bunker, should I enter the bunker?"
                                                 
                                                 "Yes enter the bunker.":
 
-                                                    scene insidebunker
-
-                                                    show bunkerguy
+                                                    scene insidebunker at big_size
 
                                                     BB "HEY, WHAT ARE YOU DOING IN HERE?"
 
@@ -550,7 +546,7 @@ label neighborhouseschoice:
 
                                                         label bunkerguychoice:
 
-                                                            scene insidebunker
+                                                            scene insidebunker at big_size
 
                                                             menu:
 
@@ -639,7 +635,11 @@ label neighborhouseschoice:
                                                 "No, its to risky, go back.":
                                                     
                                                     jump loothouseneighchoice
+                                    else:
 
+                                        "Your lockpick attempt failed."
+
+                                        jump loothouseneighchoice
 
                                 "Go Back.":
 
@@ -649,7 +649,7 @@ label neighborhouseschoice:
 
                         scene specialbook
 
-                        "You look around and find a book that has the title: you are SPECIAL."
+                        "You look around and find a book that has the title: you're SPECIAL."
 
                         menu:
                             
@@ -757,8 +757,6 @@ label redrocket:
             "The woman.":
 
                 scene nexttoredrocket
-
-                show womanindistress
 
                 DW "Please help me!"
 
@@ -977,48 +975,50 @@ label redrocket:
                 scene truckstopinterior
 
                 "You enter the truck stop and its in pretty good condition."
-
+                
                 label truckstopchoice:
 
                     scene truckstopinterior
 
-                    "Should I enter the garage, the back room, or the store front?"
+                    menu:
 
-                    "Enter the Garage":
+                        "Should I enter the garage, the back room, or the store front?"
 
-                        scene garage
+                        "Enter the Garage":
 
-                        "You search the garage and dont find much"
+                            scene garage2
 
-                        "There's a bunch of car parts but I haven't seen any fixable cars."
+                            "You search the garage and dont find much"
 
-                        jump truckstopchoice
+                            "There's a bunch of car parts but I haven't seen any fixable cars."
 
-                    "Enter the Backroom":
+                            jump truckstopchoice
 
-                        scene backroom
+                        "Enter the Backroom":
 
-                        "There doesn't seem to be any loot in the room."
+                            scene backroom
 
-                        "However, there is a radio in the corner of the room."
+                            "There doesn't seem to be any loot in the room."
 
-                        scene radio
+                            "However, there is a radio in the corner of the room."
 
-                        "You listen in and a news station called Diamond City Radio is discussing a vault dweller spotting near the vault."
+                            scene radio
 
-                        jump truckstopchoice
+                            "You listen in and a news station called Diamond City Radio is discussing a vault dweller spotting near the vault."
 
-                    "Check the Store front":
+                            jump truckstopchoice
 
-                        scene storefront
+                        "Check the Store front":
 
-                        "You check the store front and only find rotton and expired food."
+                            scene truckstopinterior
 
-                        jump truckstopchoice
-                    
-                    "Go Back.":
+                            "You check the store front and only find rotton and expired food."
+
+                            jump truckstopchoice
                         
-                        return redrocketchoice
+                        "Go Back.":
+                            
+                            return redrocketchoice
             
             "Go Back.":
 
@@ -1030,7 +1030,7 @@ label pathtoboston2:
 
     scene pathtoboston2
 
-    
+
 
 
 
